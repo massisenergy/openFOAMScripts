@@ -8,7 +8,7 @@
 ###### 5. Pass onto a) blockMesh, b) snappyHexMesh c) relocate d) autoPatch ####
 ###### e) #############################################
 ################################################################################
-STUDYNAME=Alg340kPa200DPsConical
+STUDYNAME=AlgGel80kPa200DPsConical
 INPUTCSV=$STUDYNAME.csv
 MASTERSCRIPTSPATH=/home/msr/autoMount/Data_Documents/Dox_ownCloud/\
 openFoamDataSR/Scripts_back-up
