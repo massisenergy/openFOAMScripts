@@ -1,0 +1,134 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+| =========                 |                                                 |
+| \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox           |
+|  \\    /   O peration     | Version:  2.0.1                                 |
+|   \\  /    A nd           | Web:      www.OpenFOAM.com                      |
+|    \\/     M anipulation  |                                                 |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    version     2.0;
+    format      ascii;
+    class       dictionary;
+    object      blockMeshDict;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+convertToMeters 0.001; //`0.001` scales to `mm`
+//blunted nozzle with upper and lower parts
+
+vertices
+(
+//lower_nozzle
+//Axis Points on Z
+	(0 0 0)			//0 (A)
+	(0 0 5)			//1 (B)
+//Wedge Points (with θ=2.5˚)
+	(0.1 0.004361938737 0)	//2 (C)
+	(0.1 0.004361938737 5)	//3 (D)
+	(0.1 -0.004361938737 0)	//4 (E)
+	(0.1 -0.004361938737 5)	//5 (F)
+
+//upper_nozzle
+//Axis Points on Z
+	(0 0 8)			//6 (G)
+//Wedge Points (with θ=2.5˚)
+	(4.5 0.1962872431 5)		//7 (I) 4.5*sin(2.5π/180)
+	(4.5 0.1962872431 8)		//7 (H) 4.5*sin(2.5π/180)
+	(4.5 -0.1962872431 5)	//8 (J) 4.5*sin(2.5π/180)
+	(4.5 -0.1962872431 8)	//8 (K) 4.5*sin(2.5π/180)
+);
+
+blocks
+(
+  //simpleFoam failed even with the next two lines (conformal mesh)
+  // hex (0 4 2 0 1 5 3 1) (4 1 100) simpleGrading (1 1 1)//(.33 1 1)lower_nozzle
+	// hex (1 9 7 1 6 10 8 6) (180 1 25) simpleGrading (1 1 10)//(18 1 10)upper_nozzle
+  //simpleFoam failed with the next two lines (nonconformal mesh)
+  // hex (0 4 2 0 1 5 3 1) (10 1 100) simpleGrading (.33 1 1)//(.33 1 1)lower_nozzle
+  // hex (1 9 7 1 6 10 8 6) (90 1 25) simpleGrading (18 1 10)//(18 1 10)upper_nozzle
+  //icoFoam or nonNewtonianIcoFoam worked with the next two lines
+  // hex (0 4 2 0 1 5 3 1) (10 1 100) simpleGrading (.33 1 1)//(.33 1 1)lower_nozzle
+  // hex (1 9 7 1 6 10 8 6) (90 1 25) simpleGrading (18 1 10)//(18 1 10)upper_nozzle);
+
+edges
+(
+	//arc 4 8  (-58.59 39.65 0)
+	//arc 5 9  (-10.1752 20 0)
+	//arc 6 10 (4.4139 18.4612 0)
+	//arc 7 11 (38.94 24.15 0)
+
+	//arc 5 6  (0 18.0773797131 0.9046229638)
+	//arc 9 10 (0 18.0773797131 -0.9046229638)
+);
+
+boundary
+(
+    inlet
+    	{
+        	type 		patch;
+        	faces
+        	(
+            	(6 10 8 6)	//clockwise from outside the domain, as fluid going inwards
+		//(1 5 3 1)
+        	);
+    	}
+    outlet
+    	{
+       		type 		patch;
+        	faces
+        	(
+            	(0 4 2 0)	//clockwise from inside the domain, as fluid going outwards
+        	);
+    	}
+    nozzleWall
+    	{
+        	type 		wall;
+        	faces
+        	(
+            	(2 4 5 3)
+		(7 9 10 8)
+            	//(5 6 10 9)
+            	//(6 7 11 10)
+        	);
+    	}
+    sideFront
+    	{
+        	type 		wedge;
+        	faces
+        	(
+            	(0 2 3 1)
+		(1 7 8 6)
+            	//(1 2 6 5)
+            	//(2 3 7 6)
+        	);
+    	}
+    sideBack
+    	{
+        	type 		wedge;
+        	faces
+        	(
+            	(0 1 5 4)
+		(1 6 10 9)
+            	//(2 1 9 10)
+            	//(3 2 10 11)
+        	);
+    	}
+    axis
+    	{
+        	type 		empty;
+        	faces
+        	(
+            	(0 1 1 0)
+            	(1 6 6 1)
+            	//(1 1 2 2)
+            	//(2 2 3 3)
+        	);
+    	}
+);
+
+mergePatchPairs
+(
+);
+
+// ************************************************************************* //

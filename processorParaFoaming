@@ -1,0 +1,8 @@
+#!/usr/bin/env bash
+# https://www.cyberciti.biz/faq/bash-for-loop/
+
+for OUTPUT in $(find . -type d -name "processor*")
+do
+	touch $OUTPUT/$OUTPUT.foam
+	# command on OUTPUT
+done

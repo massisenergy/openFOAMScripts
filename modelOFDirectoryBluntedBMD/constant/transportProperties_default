@@ -1,0 +1,131 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+  =========                 |
+  \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
+   \\    /   O peration     | Website:  https://openfoam.org
+    \\  /    A nd           | Version:  6
+     \\/     M anipulation  |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    version     2.0;
+    format      ascii;
+    class       dictionary;
+    location    "laminar_flow/constant";
+    object      transportProperties;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+// transportModel    Newtonian;//powerLaw;//Newtonian
+//nu              [0 2 -1 0 0 0 0] 8.917e-7; //water@25˚C
+
+// //2008ChhabraNonNewtonianExample3.1
+// transportModel    powerLaw;
+// powerLawCoeffs
+// {
+//     nuMax    [ 0 2 -1 0 0 0 0 ] 1e-3;//1e+10;//1e-3;
+//     nuMin    [ 0 2 -1 0 0 0 0 ] 1e-05;//1e-10;//1e-05;
+//     k        [ 0 2 -1 0 0 0 0 ] 2.79e-03;//3Pa.s^n, density: 1075Kg.m^-3
+//     n        [ 0 0  0 0 0 0 0 ] 0.5;
+// }
+
+// // 2019Chen_Extrusion, Example 6.1
+// transportModel    powerLaw;
+// powerLawCoeffs
+// {
+//     nuMax    [ 0 2 -1 0 0 0 0 ] 1e-3;//1e+10;//1e-3;
+//     nuMin    [ 0 2 -1 0 0 0 0 ] 1e-5;//1e-10;//1e-05;
+//     k        [ 0 2 -1 0 0 0 0 ] 8.2e-03;//8.2e-03m2s-1
+//     n        [ 0 0  0 0 0 0 0 ] 0.24;
+// }
+
+// //2017Paxton_Proposal, 2014Wüst_Tunable, 4%:20% AlgGel
+// transportModel    powerLaw;//Newtonian
+// // nu              [0 2 -1 0 0 0 0] 8.917e-7; //water@25˚C
+// // nu              [0 2 -1 0 0 0 0] 5.91e-10; //AlgGel_srout@1e6: 5.91e-5
+//
+// powerLawCoeffs
+// {
+//     nuMax    [ 0 2 -1 0 0 0 0 ] 1e-3;//1e-3
+//     nuMin    [ 0 2 -1 0 0 0 0 ] 1e-5;//1e-05;
+//     k        [ 0 2 -1 0 0 0 0 ] 13.3e-3;
+//     n        [ 0 0  0 0 0 0 0 ] 0.608;
+// }
+
+// // 2015Lee_A_preliminary, 12% alginate
+// transportModel    powerLaw;//Newtonian
+//
+// powerLawCoeffs
+// {
+//     nuMax    [ 0 2 -1 0 0 0 0 ] 1e-3;//1e-3
+//     nuMin    [ 0 2 -1 0 0 0 0 ] 1e-5;//1e-05;
+//     k        [ 0 2 -1 0 0 0 0 ] 55.76569e-3;
+//     n        [ 0 0  0 0 0 0 0 ] 0.33599;
+// }
+
+// //2016Suntornnond_A_Mathematical, PF127
+// transportModel    powerLaw;//Newtonian
+//
+// powerLawCoeffs
+// {
+//     nuMax    [ 0 2 -1 0 0 0 0 ] 1e-3;//1e+10;//1e-3
+//     nuMin    [ 0 2 -1 0 0 0 0 ] 1e-5;//1e-10;//1e-5;
+//     k        [ 0 2 -1 0 0 0 0 ] 406e-3;
+//     n        [ 0 0  0 0 0 0 0 ] 0.127;
+// }
+
+// //2015Snyder_Mesenchymal + 2008Rezende_Rheological, 2% w/v alginate
+// transportModel    powerLaw;//Newtonian
+//
+// powerLawCoeffs
+// {
+//     nuMax    [ 0 2 -1 0 0 0 0 ] 1e-3;//1e+10;//1e-3;//
+//     nuMin    [ 0 2 -1 0 0 0 0 ] 1e-05;//1e-10;//1e-05;//
+//     k        [ 0 2 -1 0 0 0 0 ] 2e-3;
+//     n        [ 0 0  0 0 0 0 0 ] 0.87;
+// }
+
+// //2020Ning_Process, 2% w/v alginate
+// transportModel    powerLaw;//Newtonian
+//
+// powerLawCoeffs
+// {
+//     nuMax    [ 0 2 -1 0 0 0 0 ] 1e-3;//1e+10;//1e-3
+//     nuMin    [ 0 2 -1 0 0 0 0 ] 1e-5;//1e-10;//1e-05;
+//     k        [ 0 2 -1 0 0 0 0 ] 10.39e-3;
+//     n        [ 0 0  0 0 0 0 0 ] 0.41;
+// }
+
+// //2020Ning_Process, 3% w/v alginate
+// transportModel    powerLaw;//Newtonian
+//
+// powerLawCoeffs
+// {
+//     nuMax    [ 0 2 -1 0 0 0 0 ] 1e-3;//1e+10;//1e-3;//
+//     nuMin    [ 0 2 -1 0 0 0 0 ] 1e-5;//1e-10;//1e-05;
+//     k        [ 0 2 -1 0 0 0 0 ] 89e-3;
+//     n        [ 0 0  0 0 0 0 0 ] 0.25;
+// }
+
+// //2009khalil_Bioprinting, 2% w/v alginate
+// transportModel    powerLaw;//Newtonian
+//
+// powerLawCoeffs
+// {
+//     nuMax    [ 0 2 -1 0 0 0 0 ] 1e-3;//1e+10;//1e-3;//
+//     nuMin    [ 0 2 -1 0 0 0 0 ] 1e-5;//1e-10;//1e-5;//
+//     k        [ 0 2 -1 0 0 0 0 ] 1.259e-3;//1259Pas^n
+//     n        [ 0 0  0 0 0 0 0 ] 0.7;
+// }
+
+//2008Chang_Effects(2009khalil_Bioprinting, 2% w/v alginate)
+transportModel    powerLaw;//Newtonian
+
+powerLawCoeffs
+{
+    nuMax    [ 0 2 -1 0 0 0 0 ] 1e-3;//1e+10;//1e-3;//
+    nuMin    [ 0 2 -1 0 0 0 0 ] 1e-5;//1e-10;//1e-5;//
+    k        [ 0 2 -1 0 0 0 0 ] 8.587e-3;//8587Pas^n
+    n        [ 0 0  0 0 0 0 0 ] 0.76;
+}
+
+// ************************************************************************* //

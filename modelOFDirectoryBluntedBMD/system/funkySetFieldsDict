@@ -1,0 +1,22 @@
+FoamFile
+{
+    version         2.0;
+    format          ascii;
+
+    // root            "/.automount/werner/Werner/bgschaid/bgschaid-foamStuff/DepositionTests";
+    // case            "neutralTest";
+    instance        "system";
+    local           "";
+
+    class           dictionary;
+    object          funkySetFieldsDict;
+}
+
+expressions (
+    setViscosity {
+        // condition       "mag(pos()-vector(0.15,0.3,0.007))<0.12";
+        field           avgNu;
+        create          true ;
+        expression      "sum(nu*vol())/sum(vol())";
+    }
+);

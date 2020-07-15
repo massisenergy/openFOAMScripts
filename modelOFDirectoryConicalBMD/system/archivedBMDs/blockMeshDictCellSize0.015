@@ -1,0 +1,196 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+=========                 |
+\\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
+\\    /   O peration     | Website:  https://openfoam.org
+\\  /    A nd           | Version:  7
+\\/     M anipulation  |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+version     2.0;
+format      ascii;
+class       dictionary;
+object      blockMeshDict;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+// Refernce:
+convertToMeters 1.0;//`0.001` sets unit to millimeter.
+
+// This part is for identification and modification of following parameters
+// with external values, by programs such as `AWK`
+Rb	  1.95;//set Rbig here
+Rs	  0.05;//0.42;//set Rsmall here
+Lu	  8.02;//set Lupper here
+Ll	  13.31;//set Llower here
+Rm    1.54;//set Rmiddle here
+
+// Minimum dimension: 0.05m (Rs, after doing `transformPoints`)
+// For snappyHexMesh, blocks should ideally be cubes (X == Y == Z). So:
+deltax_block0      0.015;//x dimension of each cell in block1
+deltax_block1      $deltax_block0;
+deltay_block0      0.03;//#calc  "1 * $deltax_block0";
+deltay_block1      $deltay_block0;
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+// coordinates
+xminAxis_block0     0;
+xmaxAxis_block0     0;
+xminAxis_block1     0;//.1;//-1;//`0` is the origin
+xmaxAxis_block1     0;//.1;//-1;//`0` is the origin
+xminWall_block0     $Rs;//lower_nozzle_xmax
+xmaxWall_block0     $Rm;//
+xminWall_block1     $Rm;//lower_nozzle_xmax
+xmaxWall_block1     $Rb;//
+yminAxis_block0     0;
+ymaxAxis_block0     $Ll;//
+yminWall_block0     0;//lower_nozzle_ymax
+ymaxWall_block0     $Ll;//
+yminAxis_block1     $Ll;//.1;//-1;//`0` is the origin
+ymaxAxis_block1     #calc "$Ll + $Lu";//.1;//-1;//`0` is the origin
+yminWall_block1     $Ll;//lower_nozzle_ymax
+ymaxWall_block1     #calc "$Ll + $Lu";//
+zmin            0;
+zmax            0.1;//
+
+// Calculation of cell numbers
+lx_block0       $Rs;
+lx_block1       $Rm;
+ly_block0       $Ll;
+ly_block1       $Lu;
+xcells_block0   #calc "round($lx_block0/$deltax_block0)";
+xcells_block1   $xcells_block0;
+// ycells_block0   #calc "round($ly_block0/$deltay_block0)";
+ycells_block0   #calc "round($ly_block0/$deltay_block0)";
+ycells_block1   #calc "round($ly_block1/$deltay_block1)";
+
+// Simplegrading expansion ratio
+expandRatio_yblock0     #calc "$Rm/$Rs";
+expandRatio_yblock1     #calc "$Rb/$Rm";
+
+vertices
+(// lowerNozzle
+  ($xminAxis_block0   $yminAxis_block0    $zmin)//0
+  ($xminWall_block0   $yminWall_block0    $zmin)//1
+  ($xmaxWall_block0   $ymaxWall_block0    $zmin)//2
+  ($xmaxAxis_block0   $ymaxAxis_block0    $zmin)//3
+  ($xminAxis_block0   $yminAxis_block0    $zmax)//4
+  ($xminWall_block0   $yminWall_block0    $zmax)//5
+  ($xmaxWall_block0   $ymaxWall_block0    $zmax)//6
+  ($xmaxAxis_block0   $ymaxAxis_block0    $zmax)//7
+//upperNozzle
+  ($xminAxis_block1   $yminAxis_block1    $zmin)//8
+  ($xminWall_block1   $yminWall_block1    $zmin)//9
+  ($xmaxWall_block1   $ymaxWall_block1    $zmin)//10
+  ($xmaxAxis_block1   $ymaxAxis_block1    $zmin)//11
+  ($xminAxis_block1   $yminAxis_block1    $zmax)//12
+  ($xminWall_block1   $yminWall_block1    $zmax)//13
+  ($xmaxWall_block1   $ymaxWall_block1    $zmax)//14
+  ($xmaxAxis_block1   $ymaxAxis_block1    $zmax)//15
+);
+
+blocks
+(
+hex (0 1 2 3 4 5 6 7)
+    ($xcells_block0 $ycells_block0 1) simpleGrading (1 $expandRatio_yblock0 1)
+hex (8 9 10 11 12 13 14 15)
+    ($xcells_block1 $ycells_block1 1) simpleGrading (1 $expandRatio_yblock1 1)
+);
+
+edges
+(
+);
+
+boundary
+(// first patches to be merged later in `mergePatchPairs`
+lowerNozzleEntry
+{
+    type    patch;
+    faces
+    (
+        (3 7 6 2)
+    );
+}
+upperNozzleExit
+{
+    type    patch;
+    faces
+    (
+        (9 13 12 8)
+    );
+}
+
+// patches to be kept for boundary condition & calculcations
+inlet
+{
+    type patch;
+    faces
+    (
+        (11 15 14 10)
+        // (19 23 22 18)
+    );
+}
+outlet
+{
+    type patch;
+    faces
+    (
+        (1 5 4 0)
+    );
+}
+lowerNozzleWall
+{
+    type wall;
+    faces
+    (
+        (2 6 5 1)
+        // (17 21 20 16)
+        // (18 22 21 17)
+    );
+}
+upperNozzleWall
+{
+    type    wall;
+    faces
+    (
+        (10 14 13 9)
+    );
+}
+axis
+{
+    type wall;
+    faces
+    (
+        (0 4 7 3)
+        (8 12 15 11)
+    );
+}
+back
+{
+    type empty;
+    faces
+    (
+        (0 3 2 1)
+        (8 11 10 9)
+        // (16 19 18 17)
+    );
+}
+front
+{
+    type empty;
+    faces
+    (
+        (4 5 6 7)
+        (12 13 14 15)
+        // (20 21 22 23)
+    );
+}
+);
+
+mergePatchPairs
+(
+      (upperNozzleExit    lowerNozzleEntry)
+      // (upperNozzleLeft_interface   upperNozzleRight_interface)
+);
+
+// ************************************************************************* //

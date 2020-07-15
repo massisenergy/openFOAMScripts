@@ -1,0 +1,67 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+  =========                 |
+  \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
+   \\    /   O peration     | Website:  https://openfoam.org
+    \\  /    A nd           | Version:  7
+     \\/     M anipulation  |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    version     2.0;
+    format      ascii;
+    class       dictionary;
+    object      extrudeProperties;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+//Extrude mesh from existing patch (by default outwards facing normals;
+//optional flips faces) or from patch read from file.
+
+constructFrom       patch;
+// sourceCase          "$FOAM_CASE";
+sourceCase          ".";
+
+sourcePatches       (back);//`auto6`:`back`
+exposedPatchName    front;//`auto0`:`front`;
+
+// Wedge extrusion.
+extrudeModel        wedge;
+nLayers             1;//If nLayers is 1, assumes symmetry around plane.
+// expansionRatio      0.002;
+
+sectorCoeffs
+{
+    axisPt          (0 0 0);
+    axis            (0 1 0);//rotational axis
+    angle           5;//resulting wedge angle (should be <= 5)
+    // For nLayers=1 assume symmetry so angle/2 on each side
+}
+
+flipNormals         false;
+mergeFaces          false;
+
+// // copied from /opt/openfoam7/tutorials/mesh/foamyQuadMesh/jaggedBoundary/system/extrude2DMeshDict
+// extrudeModel        linearDirection;
+//
+// patchInfo
+// {}
+//
+// patchType           empty;
+//
+// nLayers             1;
+//
+// expansionRatio      1.0;
+//
+// linearDirectionCoeffs
+// {
+//     direction       (0 1 0);
+//     thickness       0.1;
+// }
+//
+// wedgeCoeffs
+// {
+//     axisPt          (0 0 0);
+//     axis            (1 0 0);
+//     angle           2.4;
+// }
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
