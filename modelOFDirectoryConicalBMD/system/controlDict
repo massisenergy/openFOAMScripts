@@ -1,0 +1,105 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+  =========                 |
+  \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
+   \\    /   O peration     | Website:  https://openfoam.org
+    \\  /    A nd           | Version:  6
+     \\/     M anipulation  |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    version     2.0;
+    format      ascii;
+    class       dictionary;
+    location    "laminar_flow/system";
+    object      controlDict;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+application	      simpleFoam;
+
+startFrom         startTime;
+
+startTime         0;
+
+stopAt            endTime;
+
+endTime           2e3;
+
+deltaT            1;
+
+writeControl      timeStep;
+
+writeInterval     500;//500000
+
+purgeWrite        0;
+
+writeFormat       binary;//change to `binary` if weird problem occurs
+
+writePrecision    6;//default 6, previously 7
+
+writeCompression  off;
+
+timeFormat        general;
+
+timePrecision     6;
+
+runTimeModifiable true;
+
+// adjustTimeStep  yes;
+
+functions
+{//https://www.openfoam.com/documentation/guides/latest/doc/guide-function-objects.html
+    WSS
+    {
+        type                wallShearStress;
+        libs                ("libfieldFunctionObjects.so");
+    //Optional Entries
+        patches             ("lowerNozzleWall" "upperNozzleWall");
+        writeToFile	        no;//isn't useful
+    	log		            yes;
+	    writeControl        timeStep;
+        writeInterval       500;
+        // timeStart           0;
+        // timeEnd             1e9;
+        executeControl      timeStep;
+        executeInterval     100;
+    }
+    fieldMinMaxUNu
+    {
+        type                fieldMinMax;
+        libs                ("libfieldFunctionObjects.so");
+        fields              (U nu);
+    //Optional Entries
+        location            yes;
+        mode                magnitude;
+        log                 yes;
+        writeToFile         no;//if no then next two aren't useful
+        writeControl        timeStep;
+        writeInterval       500;
+        timeStart           0;
+        timeEnd             1e9;
+        executeControl      timeStep;
+        executeInterval     100;
+    }
+// #includeFunc	  residuals
+    // #includeFunc	  streamlines
+    // massFlow
+    // {
+    //    type patchMassFlow;
+    //    functionObjectLibs
+    //      (
+    //        "libsimpleFunctionObjects.so"
+    //      );
+    //    verbose true;
+    //    patches
+    //      (
+    //        inlet
+    //        outlet
+    //      );
+    //    factor 19.7363;
+    //    outputControl timeStep;
+    //    outputInterval 1;
+    // };
+};
+
+// ************************************************************************* //

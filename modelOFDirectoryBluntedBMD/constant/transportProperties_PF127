@@ -1,0 +1,32 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+  =========                 |
+  \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
+   \\    /   O peration     | Website:  https://openfoam.org
+    \\  /    A nd           | Version:  6
+     \\/     M anipulation  |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    version     2.0;
+    format      ascii;
+    class       dictionary;
+    location    "laminar_flow/constant";
+    object      transportProperties;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+// transportModel    Newtonian;//powerLaw;//Newtonian
+//nu              [0 2 -1 0 0 0 0] 8.917e-7; //water@25˚C
+
+//2016Suntornnond_A_Mathematical, PF127
+transportModel    powerLaw;//Newtonian
+
+powerLawCoeffs
+{
+    nuMax    [ 0 2 -1 0 0 0 0 ] 1e-3;//1e+10;//1e-3
+    nuMin    [ 0 2 -1 0 0 0 0 ] 1e-5;//1e-10;//1e-5;
+    k        [ 0 2 -1 0 0 0 0 ] 406e-3;
+    n        [ 0 0  0 0 0 0 0 ] 0.127;
+}
+
+// ************************************************************************* //
