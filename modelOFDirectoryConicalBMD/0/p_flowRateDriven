@@ -1,0 +1,53 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+  =========                 |
+  \      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
+   \    /   O peration     | Website:  https://openfoam.org
+    \  /    A nd           | Version:  7
+     \/     M anipulation  |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    version     2.0;
+    format      ascii;
+    class       volScalarField;
+    object      p;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+dimensions      [0 2 -2 0 0 0 0];
+
+internalField   uniform 0;
+
+boundaryField
+{
+    inlet//inlet
+    {
+		type                    zeroGradient;//gradient in space, in the
+        // direction normal to the patch.
+    	//type		            fixedValue;
+    	//value		            uniform 38.4;//100kPa;
+    }
+    outlet//outlet
+    {
+        type		            fixedValue;//Constant in time
+        value		            uniform 0;
+    }
+    lowerNozzleWall
+    {
+        type		            zeroGradient;
+    }
+    upperNozzleWall
+    {
+        type		            zeroGradient;
+    }
+    front//wedgeBack
+    {
+        type                    wedge;//wedgeBack
+    }
+    back//wedgeFront
+    {
+        type                    wedge;//wedgeFront
+    }
+}
+
+// ************************************************************************* //
