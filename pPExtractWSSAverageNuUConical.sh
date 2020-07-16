@@ -4,18 +4,18 @@
 #https://stackoverflow.com/a/61869488/9592557
 ################################# User_input #################################
 #input directory names that need to be processed
-STUDYNAME=Alg340kPa200DPsConical
+STUDYNAME=Alg340kPaConicalFlowRate
 #example of FOLDER value: <PF127*/>
-FOLDER=Alg_DP165_*/
+FOLDER=Alg_DP*/
 #ouput filenames
 WSSMATCH=lowerNozzleWall;#name of the patch to calculate WSS
-PPWSS=pPWSS_$WSSMATCH_$STUDYNAME_DP165mods;
-PPFLUXOUTLET=pPfluxOutlet_$STUDYNAME_DP165mods;
-PPAVGNUU=pPAvgNuU_$STUDYNAME_DP165mods;
+PPWSS=pPWSS_$WSSMATCH_$STUDYNAME;
+PPFLUXOUTLET=pPfluxOutlet_$STUDYNAME;
+PPAVGNUU=pPAvgNuU_$STUDYNAME;
 FLUXMATCH=NONE;
 
-##############################################################################
 cd $STUDYNAME || exit;
+##############################################################################
 
 # extract the maximum values of wallShearStress at the latest time
 while IFS= read -r files; do

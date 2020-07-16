@@ -4,15 +4,15 @@
 #https://stackoverflow.com/a/61869488/9592557
 ################################# User_input #################################
 #input directory names that need to be processed
-STUDYNAME=PF127p200kPa200DPsBLunted
-FOLDER=PF127_DP*
+STUDYNAME=Alg340kPaBluntedFlowRate
+#example of FOLDER value: <PF127*/>
+FOLDER=Alg_DP*/
 #ouput filenames
 WSSMATCH=lowerNozzleWall;#name of the patch to calculate WSS
 FLUXMATCH=NONE;
 PPWSS=pPWSS_$STUDYNAME;
 PPFLUXOUTLET=pPfluxOutlet_$STUDYNAME;
 PPAVGNUU=pPAvgNuU_$STUDYNAME;
-#example of FOLDER value: <PF127*/>
 
 cd $STUDYNAME || exit;
 #############################################################################
