@@ -107,8 +107,8 @@ transportProperties && rm -f transportProperties_K_n  || exit;
 # postProcess -func CourantNo || exit;# -latestTiPme;
     # simpleFoam -postProcess -func wallShearStress || exit;# | tee \
 # logs/"${PWD##*/}"_WSS.log </dev/null || exit;
-    cp -r $OFPOSTPROCESSINGDIR/flowRate/flowRatePatch ./system/ && \
-postProcess -func "flowRatePatch(name=outlet)" || exit;#| \
+#     cp -r $OFPOSTPROCESSINGDIR/flowRate/flowRatePatch ./system/ && \
+# postProcess -func "flowRatePatch(name=outlet)" || exit;#| \
 # tee logs/"${PWD##*/}"_flowrate.log
 #     postProcess -func "flowRatePatch(name=inlet)" > logs/\
 # "${PWD##*/}"inlet_flowrate.log </dev/null || exit;

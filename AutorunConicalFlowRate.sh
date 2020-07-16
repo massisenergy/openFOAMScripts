@@ -85,7 +85,7 @@ transportProperties && rm -f transportProperties_K_n  || exit;
     # logs/"${PWD##*/}"_checkMesh.log || exit;
     # making a `U` & `p` in `0` from `constant/polyMesh/boundary`
     awk -v flowRate="$flowRate" '{
-          gsub("flowRate=\"1\"","flowRate = "flowRate);
+          gsub("flowRate = \"1\"","flowRate = "flowRate);
           print $0}' $BUPFORMATTERSCRIPT > \
     bUpFormatterConical.sh && source bUpFormatterConical.sh </dev/null || exit;
 
@@ -109,8 +109,8 @@ transportProperties && rm -f transportProperties_K_n  || exit;
 # postProcess -func CourantNo || exit;# -latestTiPme;
     # simpleFoam -postProcess -func wallShearStress || exit;# | tee \
 # logs/"${PWD##*/}"_WSS.log </dev/null
-    cp -r $OFPOSTPROCESSINGDIR/flowRate/flowRatePatch ./system/ && \
-postProcess -func "flowRatePatch(name=outlet)" || exit;# | \
+#     cp -r $OFPOSTPROCESSINGDIR/flowRate/flowRatePatch ./system/ && \
+# postProcess -func "flowRatePatch(name=outlet)" || exit;# | \
 # tee logs/"${PWD##*/}"_flowrate.log
 #     postProcess -func "flowRatePatch(name=inlet)" > logs/\
 # "${PWD##*/}"inlet_flowrate.log </dev/null || exit;
