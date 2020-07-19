@@ -122,5 +122,5 @@ done;
 
 exec 3<&- ## close FD 3 when done.
 #Cleaning blockMeshDict Generated stuffs
-cd .. && find $STUDYNAME -type d -name "dynamicCode" -exec rm -rf '{}' \;
+# cd .. && find $STUDYNAME -type d -name "dynamicCode" -exec rm -rf '{}' \;
 # find $STUDYNAME -type d -name "processor*" -exec rm -r '{}' \;
