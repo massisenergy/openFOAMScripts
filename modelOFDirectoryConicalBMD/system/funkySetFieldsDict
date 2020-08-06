@@ -19,4 +19,9 @@ expressions (
         create          true ;
         expression      "sum(nu*vol())/sum(vol())";
     }
+    setTau {
+        field           Tau;
+        create          true ;
+        expression      "mag(grad(U))*nu";
+    }
 );

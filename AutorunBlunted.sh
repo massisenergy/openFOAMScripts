@@ -8,10 +8,9 @@
 ###### 5. Pass onto a) blockMesh, b) snappyHexMesh c) relocate d) autoPatch ####
 ###### e) #############################################
 ################################################################################
-STUDYNAME=PF127p200kPa200DPsBlunted
+STUDYNAME=Alg340kPa_swak4FOAM_tauBlunted
 INPUTCSV=$STUDYNAME.csv
-MASTERSCRIPTSPATH=/home/msr/autoMount/Data_Documents/Dox_ownCloud/\
-openFoamDataSR/Scripts_back-up
+MASTERSCRIPTSPATH=/home/msr/Downloads/QEMUManjaro
 MODELDIRECTORYPATH=$MASTERSCRIPTSPATH/modelOFDirectoryBluntedBMD
 INPUTBLOCKMESHDICT=$MODELDIRECTORYPATH/system/blockMeshDictX0.005Y0.010
 BUPFORMATTERSCRIPT=$MASTERSCRIPTSPATH/bUpFormatter_pBluntedBMD.sh
@@ -20,7 +19,7 @@ INPUTFVSOLUTION=$MODELDIRECTORYPATH/system/fvSolution_relaxationFactors0.95
 INPUTDECOMPOSEPARDICT=$MODELDIRECTORYPATH/system/decomposeParDict
 INPUTTRANSPORTPROPERTIES=$MODELDIRECTORYPATH/constant/transportProperties_K_n
 # FOAMINSTDIR=/opt/openfoam7;#oF7 in UBUNTU
-FOAMINSTDIR=/opt/OpenFOAM/OpenFOAM-7;#of7 in MANJARO
+FOAMINSTDIR=/opt/OpenFOAM/OpenFOAM-8;#of8 in MANJARO
 OFPOSTPROCESSINGDIR=$FOAMINSTDIR/etc/caseDicts/postProcessing
 ################################################################################
 
@@ -31,29 +30,29 @@ cd $STUDYNAME #|| exit && echo "didn't change directory";
 exec 3</dev/tty || exec 3<&0 #make FD 3 point to the TTY or stdin (as fallback)
 #https://stackoverflow.com/questions/41650892/why-redirect-stdin-inside-a-while-read-loop-in-bash/41652573#41652573
 
-awk -F, 'NR >= 138' $INPUTCSV | #choose rows
+awk -F, 'NR >= 2' $INPUTCSV | #choose rows
 while IFS="," read -r \
 directory Rb Rs Rm Lu Ll p_inlet K n deltaX deltaY; do
     mkdir -p "$directory"; #`directory` is parsed from previous command
     cd "$directory" && touch "$directory".foam;
     mkdir -p logs/ 0/ constant/ system/;
-## BLOCKMESHDICT ###### #######################################################
-    cp -r $INPUTBLOCKMESHDICT ./system/BMD &&
-    awk -v deltaX="$deltaX" -v deltaY="$deltaY" \
-    -v Rb="$Rb" -v Rs="$Rs" -v Rm="$Rm" -v Lu="$Lu" -v Ll="$Ll" '{
-        if ($1 ~ /(deltax_block0)/)
-            {print $1"\t"deltaX";"}
-        else if($1 ~ /(deltay_block0)/)
-            {print $1"\t"deltaY";"}
-        else if($0 ~ "//set Rbig here")
-            {print $1"\t"Rb";";//set Rbig here}
-        else if($0 ~ "//set Rsmall here")
-            {print $1"\t"Rs";";//set Rsmall here}
-        else if($0 ~ "//set Lupper here")
-            {print $1"\t"Lu";";//set Lupper here}
-        else if($0 ~ "//set Llower here")
-            {print $1"\t"Ll";";//set Lupper here}
-        else {print $0}}' system/BMD >| system/blockMeshDict  || exit;
+# ## BLOCKMESHDICT ###### ######################################################
+#     cp -r $INPUTBLOCKMESHDICT ./system/BMD &&
+#     awk -v deltaX="$deltaX" -v deltaY="$deltaY" \
+#     -v Rb="$Rb" -v Rs="$Rs" -v Rm="$Rm" -v Lu="$Lu" -v Ll="$Ll" '{
+#         if ($1 ~ /(deltax_block0)/)
+#             {print $1"\t"deltaX";"}
+#         else if($1 ~ /(deltay_block0)/)
+#             {print $1"\t"deltaY";"}
+#         else if($0 ~ "//set Rbig here")
+#             {print $1"\t"Rb";";//set Rbig here}
+#         else if($0 ~ "//set Rsmall here")
+#             {print $1"\t"Rs";";//set Rsmall here}
+#         else if($0 ~ "//set Lupper here")
+#             {print $1"\t"Lu";";//set Lupper here}
+#         else if($0 ~ "//set Llower here")
+#             {print $1"\t"Ll";";//set Lupper here}
+#         else {print $0}}' system/BMD >| system/blockMeshDict  || exit;
 #
     cp -ru $INPUTCONTROLDICT ./system/controlDict;
     cp -r $INPUTFVSOLUTION ./system/fvSolution;
@@ -62,6 +61,7 @@ directory Rb Rs Rm Lu Ll p_inlet K n deltaX deltaY; do
     cp -r $MODELDIRECTORYPATH/system/extrudeMeshDict ./system/;
     cp -r $MODELDIRECTORYPATH/system/fvSchemes ./system/;
     cp -r $MODELDIRECTORYPATH/system/meshQualityDict ./system/;
+    cp -r $MODELDIRECTORYPATH/system/funkySetFieldsDict ./system/;
     cp -r $MODELDIRECTORYPATH/constant/turbulenceProperties ./constant/;
 #### TRANSPORTPROPERTIES #####################################################
     rm -rf ./constant/transportProperties && \
@@ -114,6 +114,7 @@ postProcess -func "flowRatePatch(name=outlet)" || exit;#| \
 # "${PWD##*/}"inlet_flowrate.log </dev/null || exit;
     cp -v $OFPOSTPROCESSINGDIR/surfaceFieldValue/patchAverage ./system/ && \
 postProcess -func "patchAverage(name=outlet,U,nu)" || exit;
+    funkySetFields -time '500:10000';
 
     cd ..;#has to exit to the upper level to be able to run the next case
 done;

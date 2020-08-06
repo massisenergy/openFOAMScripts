@@ -47,6 +47,13 @@ runTimeModifiable true;
 
 // adjustTimeStep  yes;
 
+libs (
+      "libOpenFOAM.so"
+      "libsimpleSwakFunctionObjects.so"
+      "libswakFunctionObjects.so"
+      "libgroovyBC.so"
+     );
+
 functions
 {//https://www.openfoam.com/documentation/guides/latest/doc/guide-function-objects.html
     WSS
