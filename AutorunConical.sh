@@ -64,6 +64,7 @@ directory Rb Rs Rm Lu Ll p_inlet K n deltaX deltaY; do
     cp -r $MODELDIRECTORYPATH/system/extrudeMeshDict ./system/;
     cp -r $MODELDIRECTORYPATH/system/fvSchemes ./system/;
     cp -r $MODELDIRECTORYPATH/system/meshQualityDict ./system/;
+    cp -r $MODELDIRECTORYPATH/system/funkySetFieldsDict ./system/;
     cp -r $MODELDIRECTORYPATH/constant/turbulenceProperties ./constant/;
 #### TRANSPORTPROPERTIES #####################################################
     cp -ru $INPUTTRANSPORTPROPERTIES ./constant/transportProperties_K_n &&
@@ -115,6 +116,7 @@ postProcess -func "flowRatePatch(name=outlet)" || exit;# | \
 # "${PWD##*/}"inlet_flowrate.log </dev/null || exit;
     cp -v $OFPOSTPROCESSINGDIR/surfaceFieldValue/patchAverage ./system/ && \
 postProcess -func "patchAverage(name=outlet,U,nu)" || exit;
+    funkySetFields -time '500:10000';
 
     cd ..;#has to exit to the upper level to be able to run the next case
 done;
